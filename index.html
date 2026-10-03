@@ -3,293 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APJ SP Telco Dashboard - 28Sep2026</title>
+<title>Telco Intelligence Hub</title>
+<style>
+  :root {
+    --cisco:#049fd9;
+    --ink:#12232e;
+    --sub:#5b6b73;
+    --line:#e3e8eb;
+    --bg:#f7f9fa;
+    --card:#ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cisco);
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0;
+    color: var(--sub);
+    font-size: 15px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  a.card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  }
+  a.card:hover {
+    box-shadow: 0 8px 24px rgba(18,35,46,0.08);
+    border-color: var(--cisco);
+    transform: translateY(-2px);
+  }
+  .card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cisco);
+    background: rgba(4,159,217,0.1);
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .card h2 {
+    font-size: 19px;
+    margin: 0 0 8px;
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--sub);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .card .go {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .card .go::after {
+    content: " \2192";
+  }
+  footer {
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--sub);
+  }
+</style>
 </head>
 <body>
-<style>
- :root{ color-scheme: light; --cisco:#049fd9; --ink:#12232e; --sub:#5b6b73; --line:#e3e8eb; --bg:#f7f9fa; --card:#ffffff; --good:#1a7f4e; --warn:#b7791f; --bad:#b3261e; --japan:#7c5cff; --india:#ff8a3d; --aus:#2fb3a3; --asean:#e0507a; }
- *{box-sizing:border-box;}
- body{margin:0;}
- .wrap{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); padding:20px 24px 60px; min-height:100%;}
- .hdr{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; margin-bottom:16px;}
- .hdr h1{font-size:20px; margin:0 0 4px; letter-spacing:.2px;}
- .hdr p{margin:0; color:var(--sub); font-size:12.5px;}
- .badge-date{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:6px 14px; font-size:12px; color:var(--sub); white-space:nowrap;}
- .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-bottom:18px;}
- .stat{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
- .stat .v{font-size:19px; font-weight:700;}
- .stat .l{font-size:11px; color:var(--sub); text-transform:uppercase; letter-spacing:.4px; margin-top:2px;}
- .tabs{display:flex; gap:6px; margin-bottom:14px; border-bottom:1px solid var(--line);}
- .tab-btn{background:none; border:none; padding:10px 18px; font-size:13.5px; font-weight:600; color:var(--sub); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;}
- .tab-btn.active{color:var(--cisco); border-bottom-color:var(--cisco);}
- .panel{display:none;}
- .panel.active{display:block;}
- .toolbar{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;}
- .filters{display:flex; gap:6px; flex-wrap:wrap;}
- .chip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:5px 12px; font-size:12px; cursor:pointer; color:var(--ink);}
- .chip.on{background:var(--ink); color:#fff; border-color:var(--ink);}
- .hint{font-size:11.5px; color:var(--sub);}
- .table-card{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:auto;}
- table{border-collapse:collapse; width:100%; font-size:12.3px; white-space:nowrap;}
- th,td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:right;}
- th:first-child,td:first-child{text-align:left; position:sticky; left:0; background:inherit;}
- thead th{background:#eef2f4; color:var(--sub); font-weight:600; font-size:10.8px; text-transform:uppercase; letter-spacing:.3px; cursor:pointer; user-select:none; position:sticky; top:0; z-index:2;}
- thead th:first-child{z-index:3;}
- thead th.sorted{color:var(--ink);}
- tbody tr:hover{background:#f3f8fa;}
- .co{font-weight:700; font-size:12.6px;}
- .mkt-dot{display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:6px;}
- .co-sub{font-weight:400; color:var(--sub); font-size:10.8px; display:block; margin-top:1px;}
- .spark{vertical-align:middle;}
- .na{color:#b6bfc4;}
- .conf{display:inline-block; padding:1px 7px; border-radius:8px; font-size:9.7px; font-weight:700;}
- .conf-High{background:#e4f5ec; color:var(--good);}
- .conf-Medium{background:#fdf2df; color:var(--warn);}
- .conf-Low{background:#fce9e8; color:var(--bad);}
- .info{color:var(--sub); cursor:help; border-bottom:1px dotted var(--sub); font-size:10.8px;}
- .hoverval{cursor:help; border-bottom:1px dotted var(--sub);}
- .cisco-cell{font-weight:700; color:var(--cisco);}
- .neg{color:var(--bad);}
- .pos{color:var(--good);}
- .foot-note{font-size:11px; color:var(--sub); padding:10px 4px 0;}
- .news-summary{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--m-color,var(--cisco)); border-radius:10px; padding:14px 16px; margin-bottom:12px;}
- .news-summary h2{font-size:15px; margin:0 0 6px; display:flex; align-items:center; gap:8px;}
- .news-summary p{margin:0; font-size:12.6px; color:#33454e; line-height:1.55;}
- .news-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; margin-bottom:26px;}
- .news-card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:6px;}
- .news-card a{color:var(--ink); font-weight:700; font-size:13px; text-decoration:none; line-height:1.35;}
- .news-card a:hover{color:var(--cisco); text-decoration:underline;}
- .news-card .desc{font-size:12px; color:var(--sub); line-height:1.5;}
- .news-meta{font-size:10.6px; color:#8b979c; display:flex; justify-content:space-between; margin-top:auto; padding-top:4px;}
- .market-block{margin-bottom:8px;}
- .market-title{display:flex; align-items:center; gap:8px; margin:22px 0 8px;}
- .market-title:first-child{margin-top:0;}
- .market-title h3{font-size:15px; margin:0;}
- .market-title .mkt-dot{width:10px; height:10px;}
- select#sortSel{font-size:12px; border:1px solid var(--line); border-radius:6px; padding:4px 8px; background:#fff;}
-</style>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">APJ SP Strategy &middot; Planning &amp; Operations</div>
+      <h1>Telco Intelligence Hub</h1>
+      <p>Dashboards tracking APJ service provider performance and router market share.</p>
+    </header>
 
-<div class="wrap">
- <div class="hdr">
- <div>
- <h1>APJ Telco Operator Intelligence - Financials &amp; Market News</h1>
- <p>20 operators across Japan, India, Australia &amp; ASEAN - TTM figures converted to USD - compiled for Cisco account/capex planning</p>
- </div>
- <div class="badge-date">Data as of 28Sep2026 - ask Claude to "refresh the telco dashboard" for updated figures</div>
- </div>
+    <div class="cards">
+      <a class="card" href="telco-tracker.html">
+        <span class="tag">Dashboard</span>
+        <h2>APJ Telco Dashboard</h2>
+        <p>Product and security TCV bookings across APJC SP accounts, with quarterly, half-yearly, annual and TTM views.</p>
+        <span class="go">Open dashboard</span>
+      </a>
 
- <div class="stats" id="statCards"></div>
+      <a class="card" href="router-market-share.html">
+        <span class="tag">Dashboard</span>
+        <h2>Router Market Share Tracker</h2>
+        <p>IDC quarterly router vendor share across APeJC + Japan, by country and deployment type.</p>
+        <span class="go">Open dashboard</span>
+      </a>
+    </div>
 
- <div class="tabs">
- <button class="tab-btn active" data-tab="fin">Financial &amp; Operating Metrics</button>
- <button class="tab-btn" data-tab="news">Market News</button>
- </div>
-
- <div class="panel active" id="panel-fin">
- <div class="toolbar">
- <div class="filters" id="marketFilters"></div>
- <div class="hint">Click a column header to sort - trend sparklines show FY-end revenue/capex trajectory - (i) = data notes</div>
- </div>
- <div class="table-card">
- <table id="finTable">
- <thead>
- <tr>
- <th data-key="name" style="text-align:left">Operator</th>
- <th data-key="rev">Revenue TTM<br>(US$M)</th>
- <th data-key="revTrendSpark">Revenue Trend</th>
- <th data-key="revG">YoY %</th>
- <th data-key="ebitda">EBITDA<br>Margin</th>
- <th data-key="opm">Op.<br>Margin</th>
- <th data-key="capex">Capex TTM<br>(US$M)</th>
- <th data-key="capexTrendSpark">Capex Trend</th>
- <th data-key="capexI">Capex<br>Intensity</th>
- <th data-key="arpu">ARPU<br>(US$/mo)</th>
- <th data-key="subs">Subs<br>(M)</th>
- <th data-key="debt">Net Debt<br>/EBITDA</th>
- <th data-key="ciscoUsd">Est. Cisco-<br>Addressable Capex</th>
- <th data-key="conf">Data<br>Conf.</th>
- </tr>
- </thead>
- <tbody id="finBody"></tbody>
- </table>
- </div>
- <p class="foot-note">Methodology: revenue/capex are trailing-twelve-month figures converted to USD at approx. spot FX rates observed late-Sep 2026 (JPY~157.3, INR~95.9, AUD~0.717, SGD~0.789, PHP~62.4, IDR~17,850, VND~25,900); note the yen is ~1.5% weaker and the rupiah ~1.4% weaker vs the prior refresh, which mechanically trims USD figures for those markets, and AUD is held at 0.717 for continuity though current spot has drifted to ~0.70 - not period-average rates, so cross-year USD trend lines partly reflect currency movement, not just local-currency performance. <b>"Est. Cisco-Addressable Capex"</b> is an analyst planning estimate (routing/switching, optical/transport where relevant, data-center networking &amp; compute, security, collaboration/enterprise networking) - it excludes RAN/radio, spectrum fees, passive/tower civil infrastructure, real estate and handset subsidies, and is <u>not</u> disclosed by any operator. Treat as directional, not a committed forecast. Vocus, VNPT and Mobifone have materially weaker public disclosure - flagged Low/Low-Medium confidence.</p>
- </div>
-
- <div class="panel" id="panel-news"></div>
-</div>
-
-<script>
-const MARKET_COLOR = { Japan:'var(--japan)', India:'var(--india)', Australia:'var(--aus)', ASEAN:'var(--asean)' };
-
-const DATA = [
-// ---------------- JAPAN ----------------
-{id:"ntt", market:"Japan", name:"NTT Group", ticker:"TSE:9432", rev:89400, revG:2.5, ebitda:23.4, opm:11.8, capex:13200, capexI:14.8, arpu:25.1, arpuNote:"DOCOMO-brand mobile ARPU only (Q1 FY2026 actual JPY3,990, +JPY70 YoY), excl. fixed/hikari, enterprise and financial services", subs:91.4, subsNote:"DOCOMO mobile subscriptions incl. ahamo and Docomo MAX; excl. MVNO wholesale and fixed-line", debt:4.2, debtNote:"gross debt/EBITDA ex-Finance biz", ciscoPct:"8-14%", ciscoUsd:1450, ciscoNote:"RAN, real estate and DOCOMO Financial Group buildout excluded. NTT DATA-Cisco alliance continues (NTT DATA showcased agentic-AI/Cisco Catalyst Center integrations at Cisco Live 2026); NTT DATA is reported eyeing a further JPY1.5tn Japan data-center outlay on top of its ~$9B/7-yr plan (Aug-2026), a Cisco-relevant DC-networking opportunity not yet reflected in the estimate. Japanese players (incl. NTT DATA) continue forming dedicated subsea-cable ventures (e.g. Intra-Asia Marine/I-AM Cable), a further Cisco-adjacent transport opportunity. IOWN/AIOWN photonic network remains mostly in-house R&D, capping Cisco share; DOCOMO is piloting a Nokia-NVIDIA GPU-based AI-RAN (commercial target 2027). No material new Cisco-specific news this cycle; estimate carried forward.", conf:"Medium", years:[2024,2025,2026], rtrend:[86200,90600,89400], ctrend:[14100,13400,13200], note:"FY ends Mar. TTM YoY revenue growth revised DOWN this cycle to ~2.5% (from ~5.1%): Q1 FY2026 (ended Jun-2026) operating revenue rose only +0.7% YoY to JPY3,262bn and Q1 EBITDA FELL -1.7% YoY to JPY801.4bn, a genuine deterioration - group Smart Life (banking/payments consolidation) is now carrying most of the growth. Weaker yen (~157.3 vs 155) further trims USD figures ~1.5%. NTT Docomo Financial Group commenced operations Jul-1-2026, consolidating d Payment/d Card/Monex Securities/insurance into one financial holding structure. FY2026 guidance (Q1 results, Aug-6-2026) points to revenue +4.5% to JPY15.06tn but net profit guided down 5.5% as IOWN/AI-infrastructure investment ramps; management separately pushed its JPY4tn group EBITDA target out from FY2027 to FY2030 citing mobile-business headwinds. NTT Docomo also won Japan's first price-based spectrum auction (26GHz nationwide license, JPY6.288bn, Jun-2026). As of 28-Sep-2026: DownDetector Japan logged further user-report spikes (Sep-18 and Sep-20) but NTT DOCOMO has still issued NO official root-cause statement and no MIC incident report is on file - treat as unconfirmed intermittent disruptions, not a confirmed major outage; carried forward for watch."},
-{id:"softbank", market:"Japan", name:"SoftBank Corp", ticker:"TSE:9434", rev:44500, revG:4.2, ebitda:25.9, opm:13.5, capex:4650, capexI:10.5, arpu:23.4, arpuNote:"blended SoftBank+Y!mobile+LINEMO mobile ARPU", subs:41.2, subsNote:"mobile subs (SoftBank/Y!mobile/LINEMO); plus approx 8.5M broadband subs", debt:2.2, debtNote:"net interest-bearing debt/EBITDA", ciscoPct:"15-25%", ciscoUsd:930, ciscoNote:"Confirmed Cisco-based \"All Optical Network\" metro rollout continues, no new Cisco announcement this cycle. SoftBank Corp remains on track for its Oct-2026 commercial launch of the \"Infrinia AI Cloud OS\"-powered AI Data Center GPU Cloud, built on Nvidia GB200 NVL72 (beta live since May-2026; initial availability limited to SoftBank group companies before wider rollout) - a growing share of incremental capex is Nvidia/GPU-compute rather than Cisco-addressable networking. Ericsson separately confirmed (Mar-2026) it will expand/modernize SoftBank Corp's core network; Nokia/NVIDIA are separately building SoftBank's \"Aitras\" AI-RAN orchestrator.", conf:"Medium", years:[2023,2024,2025], rtrend:[38300,41000,44500], ctrend:[2100,2100,4650], note:"Not to be confused with SoftBank Group (9984, Arm/Vision Fund holdco). FY2025 (ended Mar-2026) actual: record revenue with confirmed +4.2% YoY growth (revised down this cycle from ~7.6%; the higher figure conflated consolidated vs core-telco revenue), net income JPY489.2bn (+3.6%), operating income JPY876.5bn; FY2026 guidance targets further revenue growth. Weaker yen (~157.3) trims USD figures ~1.5%. New medium-term plan targets approx JPY500bn/yr average telecom-only capex for FY2026-30, below the approx JPY734bn implied by the $4.7B capex figure shown here, suggesting a scope difference (telecom-only vs. total incl. DC/enterprise/AI) - flagged for reconciliation next cycle. Context note (not a Corp fundamental): parent SoftBank Group increased its Arm-Holdings-backed margin loan from $20bn to $25bn on 18-Sep-2026 to fund AI investments, contributing to read-through share-price volatility in 9434 amid a broader AI-stock selloff. NEW this cycle: parent SoftBank Group launched a record ~$11.1bn bond (Sep-21-2026, $10bn notes + EUR1bn) - the largest non-financial corporate bond from Asia-Pacific - to fund the final $10bn OpenAI tranche closing Oct-1 (cumulative OpenAI stake ~$64.6bn / ~13%); these are holdco AI items, relevant as AI-DC context but not on the telco's balance sheet."},
-{id:"kddi", market:"Japan", name:"KDDI", ticker:"TSE:9433", rev:38900, revG:5.1, ebitda:30.3, opm:19.5, capex:4650, capexI:11.9, arpu:28.0, arpuNote:"au-brand mobile ARPU only (JPY4,400-4,550, Q1 FY2027 actual, +JPY160 YoY), excl. UQ mobile/povo sub-brands and enterprise/DX revenue", subs:33.3, subsNote:"au-brand smartphone subscriptions, +390k QoQ (Q1 FY2027); broader group total incl. IoT/data is much higher", debt:2.1, debtNote:"net interest-bearing debt/EBITDA, ex-au Financial Holdings", ciscoPct:"8-13%", ciscoUsd:490, ciscoNote:"Confirmed Cisco+KDDI managed SASE service (Secure Access/SD-WAN, launched Mar-2026) remains KDDI's clearest recent Cisco security win, no new Cisco-specific news this cycle. KDDI-Sharp partnership converting an Osaka facility into a GPU-powered AI data center (\"Noetra,\" approx $2.4bn) remains on track; KDDI's Aug-2026 \"Power-to-Connect 2028\" mid-term plan earmarks JPY1.2tn over 3 years (FY2026-29) for a \"Digital Belt\" spanning low-latency networks, AI data centers, subsea-cable landing stations and satellite ground stations - a broad Cisco-relevant infrastructure opportunity. Marquee AI/DC partners remain NVIDIA (GB200 NVL72/Grace Blackwell) and HPE - a competitive signal against Cisco for DC compute/networking share.", conf:"Medium", years:[2024,2025,2026], rtrend:[35700,36700,38900], ctrend:[3900,3950,4650], note:"TTM YoY revenue growth revised UP this cycle to ~5.1% (from ~4.1%) on the confirmed Q1 print. Q1 FY2027 (Apr-Jun-2026) results (Aug-7-2026): net profit +22.1% YoY to JPY195.5bn, revenue +5.1% to JPY1.49tn, adjusted operating income +21.1% to JPY314.3bn, operating profit +21.1%, driven by 2025 mobile price hikes and reduced promo costs plus AI/cybersecurity enterprise demand; full-year forecast unchanged. KDDI formally confirmed (Jun-25-2026) a \"material weakness\" in internal control over financial reporting tied to the Biglobe/G-PLAN fictitious circular-advertising transactions, retroactively restating sales/cost figures for fiscal years ended Mar-2023 through Mar-2025. KDDI will largely end Rakuten roaming support from end-Sep-2026 in areas where Rakuten has built sufficient coverage, continuing only limited, time-bound roaming in depopulated/rural areas contingent on Rakuten building its own base stations. No new KDDI-specific announcements this week."},
-{id:"rakuten", market:"Japan", name:"Rakuten Mobile", ticker:"part of TSE:4755", rev:2580, revG:15.0, ebitda:5.0, opm:-32.0, capex:1290, capexI:50.0, arpu:16.1, arpuNote:"net ARPU (post-discount) for Rakuten Mobile MNO plans, approx JPY2,516 (+JPY42 YoY, Q2 FY2026 actual)", subs:10.75, subsNote:"MNO subscriptions as of Jun-30-2026 (10.36M at Q1-2026 close per company reporting, trending toward ~10.75M through Q2); caveat - fewer than 10M are served purely on Rakuten's own network, the remainder still relied on KDDI roaming being wound down from Oct-2026", debt:6.2, debtNote:"non-FinTech net debt/EBITDA (Jun-2026 disclosure); medium-term target 5x or below by Dec-2027", ciscoPct:"15-25%", ciscoUsd:255, ciscoNote:"CAUTION: the capex jump driving this estimate is overwhelmingly RAN/base-station buildout (excluded from Cisco-addressable capex), so treat ciscoUsd as an uncertain upper bound. Rakuten Symphony (cloud-native Open RAN/core, a Cisco competitor in this space) remains the primary internal vendor; Samsung was selected in 2026 as Rakuten Mobile's nationwide Open RAN radio supplier. There IS a confirmed, standing Cisco relationship via Rakuten Symphony (Cisco is one of the first partners in Rakuten Symphony's Real Open RAN licensing program, alongside Airspan and Tech Mahindra) - an infrastructure/RAN-adjacent relationship, not new incremental Cisco-addressable spend this cycle.", conf:"Low-Medium", years:[2024,2025,2026], rtrend:[1790,2400,2580], ctrend:[1570,660,1290], note:"Calendar-year FY (Rakuten Mobile Inc. carrier segment). Q2 FY2026 (Aug-10): subs confirmed 10.75M (+1.78M YoY), net ARPU JPY2,516 (+JPY42). FY2025: first full fiscal-year EBITDA profit (+JPY12.9bn) on revenue +32% YoY, but capex of only JPY62.9bn ($400M) missed plan on construction-labor shortages. KDDI will largely end network roaming support from end-Sep-2026, continuing only limited, time-bound roaming in depopulated areas while Rakuten builds out its own base stations, forcing Rakuten to guide FY2026 capex above JPY200bn ($1.3bn) - more than 3x FY2025's actual spend; JPY65.5bn already spent by end-Jun-2026 vs JPY62.9bn in the same period of 2025. The Sep-30-2026 roaming-contract lapse date falls just after this refresh - the actual October transition experience (service quality, capex acceleration) should be checked next cycle."},
-
-// ---------------- INDIA ----------------
-{id:"jio", market:"India", name:"Reliance Jio", ticker:"Jio Platforms", rev:18655, revG:12.0, ebitda:53.3, opm:27.5, capex:3599, capexI:19.3, arpu:2.28, arpuNote:"blended mobile ARPU, INR215.6/month (Q1 FY27, up from INR214 in Q4 FY26)", subs:533.3, subsNote:"total subs, approx 285M on 5G, +8.9M net adds in Q1 FY27; 28.6M FTTH broadband (over 43% category share)", debt:0.36, debtNote:"JPL entity-level estimate; not disclosed as a clean standalone figure, treat as directional", ciscoPct:"15-20%", ciscoUsd:630, ciscoNote:"Cisco built Jio's original All-IP core network (2017) and remains embedded in IP core/security; reinforced via the Jio-AMD-Cisco-Nokia \"Open Telecom AI Platform\" (unveiled MWC 2025), with Jio remaining the platform's first deployment/reference-architecture customer as of the most recent update (Mar-2026); no new vendor announcement found this cycle. RAN remains Nokia/Ericsson/Samsung; Reliance's AI-DC pledge also leans on NVIDIA Spectrum-X GPU fabric, where Cisco now separately ships Spectrum-X-based switches via its own NVIDIA alliance, blurring the competitive line.", conf:"Medium", years:[2024,2025,2026], rtrend:[15842,18139,18655], ctrend:[4211,3599,3599], note:"JPL does not consistently disclose standalone capex/opex; some multi-year figures are estimates. Q1 FY27 remains the latest reported quarter (Q2 FY27 due early-Nov-2026), so core financial/subscriber lines are unchanged since the 15-Sep refresh. IPO UPDATE (21-Sep-2026): after SEBI issued final observations on the Jio Platforms IPO Aug-28-2026 (approx INR37,700 crore / $3.8-4.0B fresh issue, up to 27 crore/approx 270M equity shares, approx 2.9% of post-issue equity), Jio began formal global investor roadshows the week of Sep-8-2026 across the US, Hong Kong, Singapore and UK/West Asia, still targeting a November-2026 listing. Bankers are reportedly framing valuation across a wide $130-170B range (JPMorgan said to be anchoring nearer $136B). Most proceeds earmarked to prepay approx INR27,500 crore of Reliance Jio Infocomm debt. Price band, lot size and exact dates remain undisclosed. Jio's tariff moves (INR299 entry plan, new INR3,599 10th-anniversary annual plan launched Sep-6-2026, INR300 Jio Prime relaunch with price protection through Sep-2027) continue to read as preparing the ground for an industry-wide tariff hike, though analyst timing has now SLIPPED to Q4 FY27 (Jan-Mar 2027, ~16-20% expected) from the prior Oct-Dec 2026 read. NEW (22-Sep-2026): TRAI issued the Telecom Consumer Protection (13th Amendment) Regulation forcing Jio/Airtel/Vi to offer affordable voice+SMS-only recharges without bundled data (a mild low-end ARPU headwind). No official Jio IPO price band or dates confirmed yet as of this refresh (unofficial INR1,100-1,450/share ranges circulating are rumor)."},
-{id:"airtel", market:"India", name:"Bharti Airtel", ticker:"consolidated, incl. Africa", rev:23163, revG:18.4, ebitda:57.4, opm:32.9, capex:5537, capexI:23.9, arpu:2.79, arpuNote:"India mobile ARPU, INR264/month (+5.6% YoY, Q1 FY27)", subs:680.9, subsNote:"India 491.9M + Africa 189.0M, +14.9M added in Q1 FY27; India postpaid crossed 30.0M", debt:1.17, debtNote:"consolidated net debt/EBITDA, improved from 1.70x a year earlier as net debt fell approx 18-35% YoY (methodology varies by source)", ciscoPct:"15-22%", ciscoUsd:1020, ciscoNote:"Long-standing (since 2009) SD-WAN/100G IP-optical/security alliance, extended via the Jun-2026 launch of \"Airtel Office Internet\" with Cisco for SMB security/AI/automation; no new vendor-relationship announcement this cycle. Nxtra (Airtel's data-center arm) closed a $1B funding round (Alpha Wave Global, Carlyle, Anchorage Capital, valuing Nxtra at approx $3.1B) to scale AI-ready DC capacity toward 1GW, and Nxtra is also named alongside Google/AdaniConneX in Google's $15B gigawatt-scale AI hub in Visakhapatnam. RAN remains Nokia/Ericsson; Indus Towers passive infra excluded.", conf:"Medium-High", years:[2024,2025,2026], rtrend:[18209,22208,23163], ctrend:[4737,5002,5537], note:"Q1 FY27 (reported Aug-4-2026) consolidated net profit rose 37.3% YoY to INR8,167cr on record postpaid additions (1.0M, taking postpaid base to 30.0M) and continued ARPU growth; this remains the latest reported quarter (Q2 FY27 due early-Nov-2026). Stock traded in an INR1,835-1,893 range through mid-Sep-2026, below its INR2,174.5 52-week high. Airtel Payments Bank (subsidiary, not core telecom) confirmed a chair transition - Sunil Bharti Mittal steps down as non-executive chairman effective Sep-30-2026, succeeded by Shabnam Sinha from Oct-1-2026; core Airtel board unaffected. Government-backed Vodafone Idea rescue talks continue (JSW Group reportedly evaluating an INR45,000-60,000 crore investment, Singapore's ST Telemedia also named as a potential suitor); no deal finalized. The Supreme Court is now hearing the Centre's plea challenging a Jun-2026 Bombay High Court ruling that had quashed retrospective one-time spectrum usage charges on Airtel and Vodafone Idea (potential combined relief of over INR24,000 crore) - an upside swing factor if upheld. Separately, the Supreme Court granted Vodafone Idea meaningful AGR relief this cycle (deeming its additional AGR demand a \"matter of policy\" and allowing the Centre to re-examine it, alongside a frozen ~INR87,695 crore dues profile to FY32 and a 5-year moratorium), materially improving the odds India stays a three-player market and easing near-term competitive-intensity risk for Airtel."},
-
-// ---------------- AUSTRALIA ----------------
-{id:"telstra", market:"Australia", name:"Telstra", ticker:"ASX:TLS", rev:16690, revG:-0.9, ebitda:35.0, opm:18.5, capex:2400, capexI:14.4, arpu:32.0, arpuNote:"postpaid mobile handheld ARPU (AUD45.33, +3.8%); prepaid AUD37.50 (+7.2%)", subs:26.0, subsNote:"total mobile services in operation, +4.3%/1.08M YoY; over 22M core retail handheld", debt:1.9, debtNote:"net debt/EBITDA, company-stated, confirmed post AUD1.25B buyback", ciscoPct:"8-12%", ciscoUsd:240, ciscoNote:"RAN (Ericsson/Nokia) excluded. Confirmed 15-yr Cisco relationship (Telstra Purple integrator - Evolved Services Platform, Crosswork NSO network automation) reinforced Mar-2-2026 via a Telstra/Cisco/Red Hat/Dell demo of an AI-enabled self-healing autonomous network using Cisco Nexus One (AgenticOps/MCP+RAG) for DC network fabric. NEW (22-Sep-2026): Cisco announced Telstra validated Cisco coherent optical technology on the flagship Aura Network (NCS 1014/NCS 1010 OLS, Acacia CIM 8, 800G ZR+ in the Cisco 8711, ~1.2Tbps over ~700km routed optical) - a named, current optical/transport design win, the strongest fresh Cisco signal in the region this cycle (multi-vendor validation implies Nokia/Ciena optics remain in play too). Ericsson signed a 6G research LOI (May-2026, RAN-excluded); NVIDIA's approx 2GW Australia AI buildout (Aug-2026) does not list Telstra as a partner (Firmus, IREN, Megaport, NEXTDC, AirTrunk named instead).", conf:"High", years:[2023,2024,2025,2026], rtrend:[16190,16470,16760,16690], ctrend:[2770,2630,2410,2400], note:"FY ends 30 Jun; FY26 actuals (reported 13-Aug-2026) confirm nearly every field almost exactly. Independent review of the Jul-8 GPS-timing outage (released Sep-2-2026) found an undocumented config change plus a years-old unpatched GPS-timing firmware bug, and found Telstra failed to prioritize well-known network issues; ACMA investigation continues, fine exposure up to A$30M, no fine issued as of this refresh. ACMA separately fined Telstra A$277,000 on Sep-3-2026 for unrelated SIM-swap-protection failures. The minor unconfirmed DownDetector report spike from Sep-18-2026 saw no official Telstra statement or confirmed cause and no major-media follow-up - treated as localized/minor versus the Jul-8 event, now closed out. New A$1B buyback and FY27 capex guidance of A$3.35-3.65B, partly toward the hyperscaler-anchored \"Aura Network\" long-haul fibre build; Telstra and Google also announced (Jun-1-2026) integration of Telstra's terrestrial optical backbone with Google's subsea cable infrastructure."},
-{id:"optus", market:"Australia", name:"Optus", ticker:"Singtel segment", rev:5950, revG:2.1, ebitda:28.2, opm:6.6, capex:998, capexI:16.8, arpu:24.0, arpuNote:"blended mobile ARPU (AUD34, +3.4% YoY); newly disclosed segment ARPUs (postpaid AUD50/prepaid AUD20) do not yet cleanly reconcile to this blended figure", subs:10.74, subsNote:"mobile customers (5.84M postpaid + 3.85M prepaid) - still recovering from 2025 Triple Zero outage fallout", debt:null, debtNote:"Optus-level n/d (reports consolidated into Singtel, Group net debt/EBITDA approx 1.3x); est. 2-2.5x standalone", ciscoPct:"10-15%", ciscoUsd:125, ciscoNote:"Confirmed multi-year Cisco partnership (expanded Jul-2024) for Secure Managed Network Services (Secure Firewall, SSE, Talos) - security-led, not core routing/RAN - unchanged this cycle. Competitive: Nokia won a regional 5G Massive MIMO/baseband refresh (Jun-2026) and IMS voice-core refresh (2025); Ericsson retains legacy RAN/antenna supply.", conf:"Medium", years:[2023,2024,2025,2026], rtrend:[5470,5680,5800,5950], ctrend:[920,960,980,998], note:"FY ends 31 Mar (Singtel reporting); FY26 results (21-May-2026) reconfirm revenue/EBITDA/opex growth almost exactly. The Sep-11-2026 76-minute voice-calling outage across VIC/SA/TAS/NT (third major emergency-service incident in about 12 months) is now further detailed: approx 190,000 customers had two-attempt call failures, including 46 failed Triple Zero connections and approx 40 associated police welfare checks; the Australian government (Sep-13-2026) publicly vowed a network-resilience overhaul but no further concrete regulatory action confirmed yet. The 2025 Triple Zero Federal Court case (1,005 alleged breaches, exposure up to A$250-251M) remains unresolved, no hearing outcome yet. Singtel's talks to sell a approx 30% Optus stake to Morrison (confirmed Jul-29-2026, valued above A$2bn) remain stalled after losing momentum around Aug-21-2026, with Morrison reportedly redirecting focus to a separate approx A$2.5B Ausgrid transaction - no deal signed, no revival confirmed as of this refresh. NEW this cycle: (1) a further Optus outage hit Dapto NSW around Sep-28-2026 (~9 hours, Triple Zero affected; Optus said Ericsson equipment \"did not appear to operate as it should\" and failed to alarm that 4G was down) - the SECOND Optus outage this month after the Sep-11 voice event; (2) the Triple Zero Senate inquiry released its final report Sep-21-2026 with 11 recommendations, including stripping the Emergency Call Person role from Telstra and nationalizing it under a new authority, mandatory domestic roaming, minimum reliability standards with automatic compensation, and text-to-000 - the chair called it \"the end of the era of self-regulation.\" Vendor churn (Optus insourcing network ops from Nokia; Ericsson gear implicated) plus a government-mandated resilience overhaul could open Cisco opportunities in monitoring/automation/security/IP transport."},
-{id:"tpg", market:"Australia", name:"TPG Telecom", ticker:"ASX:TPG", rev:3460, revG:-1.0, ebitda:35.1, opm:13.0, capex:535, capexI:15.5, arpu:25.0, arpuNote:"blended mobile ARPU; newly disclosed mobile-only ARPU is AUD35.21", subs:5.5, subsNote:"blended mobile customers; mobile-only subs now 5.81M (+64k H1 net adds); consumer fixed/NBN resale retained post EGW divestment", debt:2.9, debtNote:"net debt/EBITDA, targeting below 2.75x by year-end 2026", ciscoPct:"6-8%", ciscoUsd:40, ciscoNote:"Confirmed Cisco/Splunk-powered AIOps SOC (Splunk Enterprise, ITSI, SOAR, ES) for TPG's next-generation Security & Service Operations Centre across Australia, confirmed 4-Mar-2026; deal value undisclosed, security/software-centric rather than core routing/switching hardware. Core enterprise/wholesale fixed network was sold to Vocus (A$5.25B, Jul-2025), remaining capex mostly mobile RAN (Nokia) and consumer broadband/IT. No new Cisco-specific update this cycle; competing signal - TPG was named in Nokia+NVIDIA Aerial AI-RAN trials (announced 16-Sep-2026, pilots late-2026, commercial 2027), RAN-scope and Cisco-excluded but a reminder Nokia holds the mobile-infrastructure relationship.", conf:"Medium-High", years:[2023,2024,2025,2026], rtrend:[3930,3930,3580,3460], ctrend:[640,605,550,535], note:"FY25-26 not like-for-like with FY23-24 due to the AUD5.25B EGW/fibre divestment to Vocus - the revenue/capex 'drop' reflects portfolio change, not organic decline. Calendar-year FY; HY26 results (21-Aug-2026) confirm guidance midpoint (EBITDA A$821M +1%, capex additions approx A$750M guided for FY26). No material new development identified for TPG this cycle; next scheduled disclosure is the FY26 full-year result, expected around Feb-2027."},
-{id:"vocus", market:"Australia", name:"Vocus Group", ticker:"private (Macquarie/Aware Super)", rev:2250, revG:null, ebitda:30.0, opm:12.0, capex:350, capexI:15.6, arpu:null, arpuNote:"wholesale/enterprise/govt fibre operator, not a retail-ARPU business", subs:null, subsNote:"approx 51,000km owned/leased fibre, approx 15,000km subsea cable, connects approx 20,000 buildings post the TPG-EGW acquisition", debt:null, debtNote:"not disclosed; PE/infra-owned, est. 6-8x (unconfirmed)", ciscoPct:"6-10%", ciscoUsd:45, ciscoNote:"No confirmed current Cisco relationship found (a 2020 CTO interview cited Cisco core equipment, but this appears dated). Current vendor picture skews away from Cisco: Nokia supplies inter-capital optical transmission, Ciena WaveLogic 6 Extreme (1.6Tb/s, deployed Jan-2026) covers long-haul transport, Arista Networks was explicitly chosen for the \"Future State Network\" edge-routing refresh, and security/collaboration run on Fortinet/Netskope/Zoom rather than Cisco - a competitive displacement pattern across nearly every layer.", conf:"Low", years:[2023,2024,2025,2026], rtrend:[1140,1210,1230,2250], ctrend:[180,200,215,355], note:"Private (Macquarie/Aware Super since 2021 delisting), no full financial disclosure; CEO Andres Irlando (ex-Zayo/Verizon Connect) since Jul-2025. FY26 step-change reflects the Jul-2025 AUD5.25B TPG EGW/fibre acquisition, not organic growth. The A$500M Sydney-Melbourne \"ADIP\" long-haul route (contractor UGL confirmed Aug-24-2026) is in early-works phase, targeting RFS 2029. UPDATE on the Australia-Singapore Cable (ASC): follow-up testing confirmed the Sep-4-2026 break sits in Indonesian waters approx 615km from the Singapore landing station; a Vocus statement (18-Sep-2026) confirms repair sequencing - a separate Indigo West cable fault will be repaired first (targeted restoration 24-Oct-2026) to preserve an alternate Australia-Asia path, with the ASC's permanent repair to follow (targeted completion 4-Nov-2026); dates remain weather/vessel/permitting-dependent and may shift. Temporary workarounds (Perth-Singapore via Jakarta, a new Japan-Guam 100G path now confirmed live) remain in place, traffic continues to be rerouted in the interim. UPDATE (25-Sep-2026): repair sequencing reaffirmed - Indigo West first (targeted ~24-Oct), then ASC marine repair from ~25-Oct with completion targeted ~4-Nov; the repair vessel is slated to depart Singapore ~11-Oct, with timing still subject to Indonesian permitting/weather."},
-{id:"nbn", market:"Australia", name:"NBN Co", ticker:"govt-owned wholesale", rev:4221, revG:3.0, ebitda:75.3, opm:22.0, capex:2139, capexI:50.7, arpu:37.0, arpuNote:"wholesale ARPU charged to retail ISPs (AUD52), at/near the long-stated AUD51 target", subs:8.63, subsNote:"activated premises; FTTP now approx 3.3M connections (40% of footprint) and for the first time exceeds copper", debt:9.0, debtNote:"net debt/EBITDA approx 9x per company disclosure - reflects the govt equity/loan-funded build model; a direct calc from disclosed A$27.5B net debt / A$4.46B EBITDA implies closer to 6.2x, a reconciliation gap flagged but not resolved this cycle", ciscoPct:"5-10%", ciscoUsd:160, ciscoNote:"Capex dominated by passive fibre/FTTP electronics, HFC and fixed-wireless access (Nokia/Adtran/Calix domain, excluded). Cisco's confirmed relationship (National Core Network contract, since expired/dated) has not been renewed; NBN's optical backbone has Nokia lineage (via the 2025 Nokia acquisition of Infinera, which had absorbed Coriant, NBN's original optics supplier) rather than Cisco/Ciena. Exposure limited to core/aggregation routing at Points of Interconnect and enterprise IT/OSS. No new Cisco-specific update this cycle.", conf:"Medium-High", years:[2023,2024,2025,2026], rtrend:[3763,3976,4081,4221], ctrend:[1917,2343,2451,2139], note:"FY ends 30 Jun; FY26 results (12-Aug-2026) confirm revenue/EBITDA/capex almost exactly and marked a \"fibre tipping point\" - more customers on fibre than copper for the first time. The ACCC published its final wholesale-pricing \"Replacement Module\" determination for the FY27-29 cycle on Aug-27-2026, capping average wholesale price increases and the entry-level product at CPI and mandating a faster 25/10 Mbps entry-level tier from Jul-1-2027. NBN Co continues progressing Amazon Leo (formerly Project Kuiper) LEO-satellite trials in Tasmania (Jul-Sep 2026), still targeting commercial rollout around Q4 2026; no material update or schedule change found this cycle."},
-
-// ---------------- ASEAN ----------------
-{id:"singtel", market:"ASEAN", name:"Singtel", ticker:"SGX:Z74 - Singapore", rev:11124, revG:0.8, ebitda:27.0, opm:10.5, capex:1936, capexI:17.4, arpu:17.0, arpuNote:"Singapore mobile ARPU only (SGD22, -4.7% YoY); group blended ARPU not disclosed", subs:4.5, subsNote:"Singapore-only; approx 839M group mobile incl. Airtel/AIS/Telkomsel/Globe associates (proportional, not equity-adjusted)", debt:1.4, debtNote:"net debt/EBITDA incl. associates profit share (Singtel's own methodology); S&P upgraded Singtel to A+ (Aug-2026) citing debt reduction to approx S$7.5B (1.7x EBITDA); a pure net-debt/EBITDA calc without the associates adjustment would run closer to 2.3x", ciscoPct:"15-20%", ciscoUsd:335, ciscoNote:"Cisco has anchored Singtel core-IP/IX routing since 1999, reinforced by 2024-26 joint quantum-safe networking work with Cisco, Fortinet and Nokia (still no 2026 renewal confirmed). NCS (Singtel's ICT arm) remains a confirmed Cisco Gold Integrator Partner (SD-WAN, security, collaboration). No confirmed current large infrastructure deal beyond this; RAN is Ericsson. Singtel's Nxera/RE:AI AI-DC buildout (58MW Tuas DC) runs on NVIDIA GB200 NVL72 with no confirmed Cisco DC-networking role identified.", conf:"Medium-High", years:[2024,2025,2026], rtrend:[11020,11034,11124], ctrend:[1677,1664,1936], note:"FY ends 31 Mar; FY26 fully reflected (net profit +40% on a S$2.84B exceptional gain from partial Airtel stake sales; underlying net profit +12% to S$2.77B), FY27 guidance is \"low-to-mid single digit\" EBIT growth. UPDATE: the KKR-led consortium (KKR 75%/Singtel 25%) COMPLETED acquisition of the remaining 82% of STT GDC on Sep-3-2026 at approx S$13.8B enterprise value (S$6.6B cash consideration) - Southeast Asia's largest-ever digital-infrastructure M&A deal, now closed (previously flagged as expected 2H CY2026). Singtel's parallel talks to sell a approx 30% Optus stake to Morrison remain stalled, with Morrison reportedly pivoting toward a separate Ausgrid transaction; no deal signed as of this refresh. NEW: Singtel and Thailand's Gulf Development formed a strategic partnership (Sep-10-2026) to jointly build subsea cable infrastructure, starting with the Vietnam-Thailand-Singapore (VTS) Cable System, targeting regional AI/cloud demand. UPDATE this cycle: Q1 FY27 revenue accelerated to ~+4.9% YoY, and at its 27-Aug Investor Day Singtel RAISED FY27 capex guidance to ~S$3.0B (from ~S$2.5B; roughly S$1.8B core + S$1.2B AI/digital), lifting capex intensity toward ~19-21% and enlarging the Cisco-addressable base; Singtel also won Frost & Sullivan's 2026 APAC Company of the Year for 5G Enterprise Leadership (Sep-23), a positive enterprise-segment signal."},
-{id:"viettel", market:"ASEAN", name:"Viettel Group", ticker:"state/military-owned - Vietnam", rev:8477, revG:13.8, ebitda:42.0, opm:25.8, capex:1500, capexI:17.7, arpu:4.0, arpuNote:"Vietnam market proxy, not disclosed", subs:72.5, subsNote:"domestic subs (54-56% share of approx 127-130M VN mobile connections); large overseas base separate (Viettel Global Q1-2026 revenue +30% YoY, targeting approx $2B for 2026)", debt:null, debtNote:"not disclosed - sovereign-backed balance sheet", ciscoPct:"20-28%", ciscoUsd:360, ciscoNote:"Confirmed - first SEA telco on Cisco 8000/Silicon One routers (expanded Feb-2024) with Crosswork NSO; reaffirmed May-5-2026 at Cisco Connect Vietnam (Hanoi); no new Cisco/Huawei/Juniper/Ciena/NVIDIA vendor news found this cycle. Competitive signals: Juniper Networks remains a decade-plus incumbent for core/edge/security routing; Ciena WaveLogic 5/6 Extreme sits on the optical backbone; Ericsson/Nokia hold 5G RAN (excluded); Huawei signed a tech-transfer agreement (Jun-2025) reversing its 2019 exclusion. NVIDIA has an exclusive-in-Vietnam \"AI Nation Partnership\" (DGX B200 GPUs at Hoa Lac) with no confirmed Cisco networking inside those AI clusters yet.", conf:"Medium", years:[2022,2023,2024,2025], rtrend:[6300,6635,7308,8477], ctrend:[1071,1128,1346,1654], note:"Revenue/profit are official disclosures; EBITDA/ARPU/debt are estimates. Calendar-year FY. Vietnam's mandated nationwide 2G shutdown took effect Sep-15-2026 (all operators required to permanently switch off remaining 2G base stations); Viettel ran the largest documented device-subsidy program (700,000 free 4G feature phones, approx $12.2M) ahead of the deadline; no major post-shutdown incident reports found yet. A multi-cable subsea fault (SJC2, AAE-1, AAG, TGN-IA, from late-Aug/Sep-1-2026) cut approx 30% of Vietnam's international internet traffic; as of this refresh, IA/TGN-IA repairs are reported complete, AAE-1 repair is targeted for late-Sep pending vessel availability, and no repair schedule has been announced yet for SJC2/AAG - restoration remains only partial. Freed 900MHz spectrum was auctioned Sep-9-2026; Viettel won block C4/C4-prime (905-910/950-955MHz) for approx VND1.077 trillion, alongside VNPT and Vietnamobile."},
-{id:"vnpt", market:"ASEAN", name:"VNPT", ticker:"state-owned - Vietnam", rev:2356, revG:4.6, ebitda:null, opm:10.8, capex:420, capexI:17.8, arpu:2.4, arpuNote:"triangulated, not disclosed", subs:30, subsNote:"over 30M mobile (some third-party estimates put VinaPhone nearer 39M), over 8M broadband - recently overtaken by Viettel for the #1 fixed-broadband position", debt:null, debtNote:"not disclosed (SOE); balance sheet proxy suggests lightly levered (assets $4.48B vs liabilities $1.62B, Jun-2026)", ciscoPct:"~15%", ciscoUsd:63, ciscoNote:"Confirmed May-2022 Cisco MoU on core-network virtualization/5G core (PM-witnessed); no follow-on scale-up news found since, and no new Cisco activity found this cycle - a stalled relationship relative to Viettel. Nokia renewed/expanded its RAN partnership (AirScale/ReefShark/MantaRay, Oct-2025) and Ericsson remains an active supplier - both showing stronger recent traction than Cisco. VNPT runs its own in-house cybersecurity brand (\"VNPT Cyber Immunity\") rather than buying third-party security. Competitive loss this cycle: RADCOM was selected (Sep-9-2026) displacing the incumbent OSS/assurance vendor. NEW positive: VNPT and Qualcomm expanded their partnership (Sep-25-2026, signed in New York during UNGA) targeting over $200M of AI opportunities by 2028 (edge-AI, XGS-PON, Wi-Fi 7/8).", conf:"Low-Medium", years:[2022,2023,2024,2025], rtrend:[2117,2103,2244,2356], ctrend:[null,null,null,420], note:"Management-reported vs audited revenue conflict persists; H1-2026 figures showed +8% YoY revenue growth but gross profit compressed -18% YoY, with profit growth coming mainly from a 30% cut in admin expenses rather than revenue quality - a margin-quality flag. VNPT remains on Vietnam's official 20-SOE equitization list (Decree 57/2026/ND-CP, effective Feb-2026); Phase 1 (2026-27) is asset inventory, Phase 2 (2027-28) is strategic-investor offering - no IPO date or valuation set yet, no update this cycle. New MVNO (\"Pottel,\" run by Vietnam Post on VNPT/VinaPhone infrastructure) launched Aug-15-2026. NEW: VNPT won 900MHz spectrum block C3/C3-prime (900-905/945-950MHz) for approx VND1.079 trillion in the Sep-9-2026 auction, alongside Viettel and Vietnamobile."},
-{id:"mobifone", market:"ASEAN", name:"Mobifone", ticker:"state-owned - Vietnam", rev:1569, revG:null, ebitda:null, opm:16.2, capex:170, capexI:10.8, arpu:3.0, arpuNote:"triangulated, not disclosed", subs:18, subsNote:"estimated approx 15-18% share of VN mobile connections; conflicting public claims (approx 18M vs 60M+) unresolved", debt:null, debtNote:"not computable (EBITDA n/d)", ciscoPct:"5-10%", ciscoUsd:null, ciscoNote:"No evidence found of an active Cisco relationship 2024-2026 despite extensive searching, and no new vendor news found this cycle - a genuine whitespace finding, the weakest of all 20 operators. Confirmed vendors instead: Ericsson (5G Innovation Hub MOU, Oct-2024); Rakuten Symphony (Open RAN MOU Jun-2025, launched Vietnam's first commercial Open RAN network in Da Nang, Nov-2025); CMC Technology Group (Dec-2025 MOU covering transmission/data centers/cloud/AI, underlying hardware vendor not named); Ciena (2016, historical only). Weakest disclosure of all 20 operators, under Ministry of Public Security oversight since Mar-2025.", conf:"Low", years:[2023,2024], rtrend:[1500,1569], ctrend:[null,170], note:"Only 2024 revenue/operating income are confirmed; no 2025/2026 public figures found - treat trend with low confidence. A fintech spinout (\"MobiFone Digital Payment JSC,\" 51% Mobifone/38% One Mount/11% Techcombank) began operating Mar-2026, ending Napas's monopoly on payment switching/clearing - immaterial to core telecom capex. Mobifone was proactive on 2G, returning 900MHz spectrum and reducing 2G service from Sep-2025, a full year ahead of the Sep-15-2026 nationwide deadline. No new Mobifone-specific developments found this cycle; the Ministry of Public Security (Mobifone's parent ministry) established a new Department of Information Technology and Cipher Services on Sep-15-2026 - relevance to Mobifone specifically unconfirmed."},
-{id:"pldt", market:"ASEAN", name:"PLDT Inc.", ticker:"PSE:TEL - Philippines", rev:3424, revG:2.0, ebitda:52.0, opm:26.0, capex:855, capexI:25.0, arpu:23.7, arpuNote:"Smart mobile postpaid+prepaid blended (PHP1,485, approx $23.7); Home Fiber approx $21.5/mo separate, temporarily depressed by typhoon customer waivers/OSS migration", subs:68.1, subsNote:"Mobile (Smart) 60.1M + fixed broadband 3.9M + 5G device users 12.2M (20% of base, +34% YoY)", debt:2.57, debtNote:"net debt/EBITDA; H1-2026 reported approx 2.6x; VITRO REIT data-center listing (targeted approx $400M) expected to cut leverage further, but the Oct-12 listing was POSTPONED (Sep-28-2026) to lock in cornerstone investors, now targeted year-end 2026", ciscoPct:"15-20%", ciscoUsd:150, ciscoNote:"Active confirmed Apr-2026 PLDT Enterprise-Cisco Managed SD-WAN/real-time network solutions collaboration (manufacturing/logistics/pharma verticals) - the strongest confirmed 2026 Cisco signal across all 20 operators researched, continuing a 2019 IP-transport relationship; no new Cisco news this cycle. PLDT's VITRO Santa Rosa hyperscale AI data center (approx $350M, 50MW, expanding toward 100MW at Cavite) runs NVIDIA GPU servers for its GPUaaS offering - the compute layer goes to NVIDIA even as Cisco holds the enterprise SD-WAN/networking layer. Core optical for the new Asia Direct Cable/hyperscaler backhaul uses Ciena WaveLogic 5 Extreme.", conf:"Medium-High", years:[2023,2024,2025,2026], rtrend:[3360,3328,3395,3424], ctrend:[1411,1251,965,855], note:"Well-disclosed via SEC 6-K/20-F filings; FY2025 was PLDT's first full year of positive free cash flow in seven years, and H1-2026 capex fell further (H1 revenue PHP108.7B, EBITDA PHP56.1B, net income PHP16.4B, capex PHP20.7B vs PHP27.4B YoY), implying an intensifying capex-discipline trend. Leo I. Posadas continues serving as Officer-in-Charge for Finance/Risk/Sustainability since Jun-1-2026 (following Danny Yu's retirement); no permanent CFO named yet. PLDT's approval (May-2026) to acquire the remaining 65.1% of Radius Telecoms is still pending regulatory approval (PCC/NTC). UPDATE (28-Sep-2026): VITRO REIT (ePLDT data-center subsidiary), set to be the Philippines' first digital-infra REIT (approx $400M across 8 DC assets, approx 24MW, portfolio valuation near $800M), had its Oct-12 listing POSTPONED - PLDT/MVP are finalizing cornerstone investors and now target year-end 2026; the prior Oct-12 date is stale. H1-2026 capex intensity also trended down to ~19% (from ~25-26% a year earlier), reinforcing the capex-discipline story. VITRO REIT earlier signed a colocation deal with Singapore's SG.GS (late-Aug-2026). PLDT, Globe and Converge's joint $500M Philippines undersea fibre backbone proposal remains under DICT government review, with DICT Secretary Aguda targeting an operational system before Marcos' term ends Jun-2028."},
-{id:"globe", market:"ASEAN", name:"Globe Telecom", ticker:"PSE:GLO - Philippines", rev:2717, revG:6.0, ebitda:52.6, opm:18.5, capex:855, capexI:31.5, arpu:13.5, arpuNote:"postpaid approx $13.5/mo (flat); prepaid approx $1.9/mo (+25% YoY); blended/broadband ARPU not disclosed for 2026", subs:67.7, subsNote:"mobile subs (H1-2026 mobile subs reported 63.1M, +5% YoY, incl. 39.6M mobile-data users); broadband 2.4M (fiber over 2.0M +32% YoY, plus GFiber Prepaid 1.1M)", debt:2.48, debtNote:"net debt/EBITDA (company-reported); gross debt/EBITDA 2.68x; leverage ticked up in Q2 2026 as capex accelerated", ciscoPct:"10-16%", ciscoUsd:110, ciscoNote:"One of the longest-running Cisco relationships in the region - built Globe's IP/MPLS backbone from 2000 (an early Cisco Powered Network member), though no confirmed CURRENT (2026) large deal was found - the relationship reads as stale relative to PLDT's, and no new Cisco/Palo Alto news found this cycle. Competitive/vendor signals: Globe Business partnered with Palo Alto Networks for enterprise cybersecurity (a direct displacement risk to Cisco Security); an expanded Nokia partnership targets network power efficiency; Globe's STT GDC Philippines JV (with Ayala Corp, scaling toward over 30MW by end-2026) is explicitly recognized as an NVIDIA ecosystem infrastructure partner.", conf:"Medium-High", years:[2023,2024,2025,2026], rtrend:[2608,2640,2642,2717], ctrend:[1120,899,739,855], note:"Well-disclosed via PSE filings. H1-2026 capex ran +39% YoY (H1 gross service revenue PHP85.4B +6% YoY, EBITDA PHP44.9B +6%; FY2026 capex guidance remains \"under $1 billion\") - a sharp reversal of the 2023-2025 capex-cutting trend. NEW: Mynt (GCash's parent) IPO was APPROVED by the PSE Sep-18/19-2026 - potentially the Philippines' largest-ever IPO at up to PHP92.3B (approx $1.6B) at a PHP10 ceiling; bookbuilding/final pricing set for Oct-1, offer period Oct-6 to Oct-12, listing targeted Oct-20; analyst consensus range remains PHP7.50-8.50 (below ceiling) - a major near-term valuation catalyst for Globe. Globe also fully redeemed its remaining $174M senior perpetual capital securities on Aug-3-2026. PLDT, Globe and Converge's $500M undersea fibre proposal remains under DICT government review as of this refresh."},
-{id:"indosat", market:"ASEAN", name:"Indosat Ooredoo Hutchison", ticker:"IDX:ISAT - Indonesia", rev:3410, revG:13.1, ebitda:47.6, opm:20.0, capex:820, capexI:24.0, arpu:2.61, arpuNote:"blended mobile ARPU, IDR46,000 (+17.3% YoY, H1-2026)", subs:93.4, subsNote:"mobile subs, per official H1-2026 filing (stable YoY); fixed fiber business divested to Infra Fiber Teknologi/Arsari Group Dec-2025, so no comparable fixed-broadband KPI remains", debt:0.10, debtNote:"net debt/EBITDA, sharply improved from 0.49x a year earlier, explicitly attributed to approx $660M cash proceeds from the Dec-2025 fiber divestment - one of the lowest leverage ratios in the region", ciscoPct:"10-15%", ciscoUsd:100, ciscoNote:"Cisco-powered Security Command Center (with Splunk and Cisco CX) launched Mar-3-2026 remains a confirmed Cisco security engagement, alongside a Jul-2025 Indosat-KOMDIGI-NVIDIA-Cisco national \"AI Center of Excellence\"; no new Cisco-specific news this cycle. CAUTION: the flagship \"Zankore\" AI-DC platform (Ooredoo Group/Indosat/NVIDIA/Nokia, targeting up to 1GW long-term) formally closed its $3.1B senior loan facility Sep-9/11-2026, funding an initial 100MW facility scaling toward approx 200MW by H1-2027 (NVIDIA GB300 NVL72, DSX MaxLPS power optimization) - a separately capitalized legal entity that will NOT appear in Indosat's own capex, and uses Nokia (not Cisco) for AI-networking. Nokia also won a nationwide 5G RAN/AI-RAN modernization deal (Jun-2026); Huawei jointly won a TM Forum 2026 award with Indosat.", conf:"Medium", years:[2023,2024,2025,2026], rtrend:[3362,3459,3432,3410], ctrend:[800,615,806,820], note:"IDR weakened to a record low near IDR18,247-18,279/USD in Jun-Jul-2026 before partially recovering, making USD revenue look flatter than the +13.1% YoY local-currency growth suggests. H1-2026 results (reported late-Jul-2026) cross-confirm nearly every field; net profit +49% YoY on an \"AI-led growth\" narrative (AI Cloud/Neo Cloud unit Lintasarta generated $33M in H1-2026 alone, already exceeding all of 2025's $28M, against a full-year 2026 target of $100M). FY2026 capex guidance was raised approx 77% (to approx IDR23tn/$1.3B) after winning 2026 spectrum (700MHz 20MHz + 2.6GHz 60MHz, finalized by KOMDIGI Jul-22-2026), with the incremental spend earmarked almost entirely for 5G RAN (Cisco-excluded). The Zankore $3.1B loan facility close is the only material update this cycle; no other new developments."},
-{id:"telkom", market:"ASEAN", name:"PT Telkom Indonesia", ticker:"IDX:TLKM", rev:8452, revG:3.9, ebitda:49.4, opm:23.0, capex:1400, capexI:16.6, arpu:2.55, arpuNote:"Telkomsel blended mobile ARPU (IDR45,600, +9% YoY)", subs:159, subsNote:"Telkomsel mobile subscribers (stale figure last confirmed FY2024, no updated 2026 headcount found); IndiHome fixed broadband 9.5M (H1-2026), down from 10.1M YoY on a deliberate \"strategic calibration\" toward higher-ARPU customers, not competitive loss", debt:1.0, debtNote:"net debt/EBITDA approx 1.0x (FY2025); management guidance band 0.5x-1.5x; no H1-2026-specific figure found", ciscoPct:"8-12%", ciscoUsd:145, ciscoNote:"No confirmed new Cisco-Telkom/Telkomsel deal found for 2025, 2026, or this cycle's search - the most recent is a Dec-2022 MOU (NeutraDC IoT/SDN), now stale, a genuine white-space/at-risk finding. Competitors have been active: ZTE signed a strategic MOU (May-2026); Huawei Cloud deepened its AI partnership with Telkomsel and launched a joint CDN service (Dec-2025), planning a 4th Indonesian Availability Zone for 2026; Ruijie Networks signed a strategic distributor partnership for enterprise networking (Aug-5-2026). No confirmed 2025-2026 Cisco, Juniper or Arista activity was found at all - a whitespace flag for account planning that persists this cycle.", conf:"Medium-High", years:[2023,2024,2025,2026], rtrend:[9790,9283,8908,8452], ctrend:[2428,1516,1603,1400], note:"Dual-listed (IDX/NYSE 20-F filer), highly disclosed. H1-2026 results cross-confirm the figures above under the \"TLKM 30\" transformation program. The InfraNexia fiber/transport carve-out Phase 2 (approx IDR49.86tn/$2.8B, non-cash share transfer, spinning the Wholesale Fiber Connectivity business into PT Telkom Infrastruktur Indonesia) shareholder EGM is CONFIRMED still proceeding electronically via the KSEI eASY.KSEI platform for Sep-30-2026 (per a filing updated Sep-8-2026); vote results expected around Oct-2-2026 - STILL PENDING as of this 28-Sep refresh, just 2 days out; confirm the outcome next cycle (some trade outlets have prematurely reported the ~IDR85.7tn/$4.8B combined Phase 1+2 transfer as completed ahead of the formal shareholder vote - treat as unconfirmed until the EGM concludes). Some trade outlets (Aug-12-2026) prematurely reported the Phase 2 transfer as \"completed\" (deed signed, combined Phase 1+2 at IDR85.7tn/$4.8B) ahead of formal shareholder approval - treat as unconfirmed until the EGM vote occurs. The Aug-14-2026 \"fraud claims\" headline remains UNRESOLVED - no new public statement since; background involves SEC/DOJ reportedly investigating approx 140 transactions (2014-2021, approx Rp5tn) for lack of economic substance, requiring a Telkomsat restatement; IDX supervisory hearing held Apr-8-2026, accounting-policy reclassification (Apr-30-2026) to be applied retrospectively in the 2025 20-F. Separately, the NeutraDC (data-center unit) partial-divestment process has advanced to a binding-bid stage (Singtel/BDx among suitors), targeting completion by end-2026 for a majority stake at $1-1.5B valuation; do not conflate with InfraNexia."},
-{id:"xlsmart", market:"ASEAN", name:"XL Smart (XLSMART)", ticker:"IDX:EXCL - Indonesia", rev:2670, revG:26.0, ebitda:46.0, opm:null, capex:1080, capexI:40.4, arpu:2.65, arpuNote:"blended mobile ARPU (IDR47,100 H1 2026), up from IDR38,200 H1 2025; no brand-level (XL/AXIS/Smartfren) breakdown disclosed", subs:69.4, subsNote:"down from 94.5M pro-forma combined at merger close - management attributes this explicitly to deliberate \"SIM base cleanup,\" not competitive churn; plus 940,000 fixed broadband", debt:2.61, debtNote:"net debt/EBITDA incl. lease financing (Jun-2026), down from 3.38x at FY2025-end; targeting 2.5x by end-2026", ciscoPct:"5-8%", ciscoUsd:75, ciscoNote:"Confirmed Cisco engagement: XLSMART launched a \"Transport Master Controller\" (Mar-10-2026), an SRv6-based multi-domain transport network management platform described as \"supported by Cisco\" - appears to be a software/controller-layer engagement only, not confirmed core routing/switching hardware; no new Cisco news this cycle. MAJOR COMPETITIVE SIGNAL: in May-2025 XLSMART named Huawei and ZTE as its SOLE network infrastructure vendors for national network operations, deepened further by a ZTE MOU (Jul-28-2026) for AI-powered 5G/FWA, and reinforced AGAIN by a new joint ZTE-Huawei strategic partnership signed Sep-14-2026 covering network operations management and digital talent development - vendor lock-in with Huawei/ZTE continues to deepen, no counter-signal from Cisco found.", conf:"Medium", years:[2023,2024,2025,2026], rtrend:[2421,2138,2580,2670], ctrend:[700,750,680,1080], note:"FY2026 capex guidance raised to IDR20 trillion (confirmed Sep-5-2026, up from a prior IDR15T guide), driven by an accelerated 5G rollout target raised from 88 to 101 cities; over 50 cities/approx 15,000 5G BTS live, approx 23% population coverage as of H1-2026. The 700MHz(30MHz)/2.6GHz(50MHz) spectrum contest is RESOLVED - KOMDIGI confirmed XLSmart as a winner Jul-22-2026 (Telkomsel and Indosat also won allocations in the same auction). Merger (XL Axiata + Smartfren, completed Apr-2025) synergies reached $252M gross by end-FY2025 ($153M realized in H1-2026 alone); network integration approx 80% complete as of Mar-2026, full completion targeted 2027. The Q2-2026 special audit (disclosed via OJK/IDX filing Jul-17-2026) remains UNRESOLVED - no findings or reason disclosed yet, still a watch item."},
-];
-
-// ---- Summary stats ----
-const totalRev = DATA.reduce((s,d)=>s+(d.rev||0),0);
-const totalCapex = DATA.reduce((s,d)=>s+(d.capex||0),0);
-const totalCisco = DATA.reduce((s,d)=>s+(d.ciscoUsd||0),0);
-const statCards = [
- {v:'$'+(totalRev/1000).toFixed(0)+'B', l:'Combined TTM Revenue - 20 operators'},
- {v:'$'+(totalCapex/1000).toFixed(1)+'B', l:'Combined TTM Capex'},
- {v:'$'+(totalCisco/1000).toFixed(1)+'B', l:'Est. Cisco-Addressable Capex / yr'},
- {v:(100*totalCisco/totalCapex).toFixed(1)+'%', l:'Addressable share of total capex'},
-];
-document.getElementById('statCards').innerHTML = statCards.map(s=>`<div class="stat"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join('');
-
-// ---- Sparkline helper ----
-function sparkline(values, color){
- if(!values || values.filter(v=>v!=null).length<2) return '<span class="na">n/a</span>';
- const w=88,h=26,pad=3;
- const clean = values.map(v=>v==null?null:v);
- const nums = clean.filter(v=>v!=null);
- const min=Math.min(...nums), max=Math.max(...nums), range=(max-min)||1;
- let lastX=null,lastY=null; const segs=[];
- clean.forEach((v,i)=>{
- const x = pad + (i/(clean.length-1))*(w-2*pad);
- if(v==null) return;
- const y = h-pad - ((v-min)/range)*(h-2*pad);
- if(lastX!=null) segs.push(`M${lastX.toFixed(1)},${lastY.toFixed(1)} L${x.toFixed(1)},${y.toFixed(1)}`);
- lastX=x; lastY=y;
- });
- const upDown = nums[nums.length-1] >= nums[0] ? '#1a7f4e' : '#b3261e';
- const dotCol = color || upDown;
- const lastPt = (()=>{ for(let i=clean.length-1;i>=0;i--){ if(clean[i]!=null){ const x=pad+(i/(clean.length-1))*(w-2*pad); const y=h-pad-((clean[i]-min)/range)*(h-2*pad); return {x,y}; } } })();
- return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="${segs.join(' ')}" fill="none" stroke="${dotCol}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${lastPt.x.toFixed(1)}" cy="${lastPt.y.toFixed(1)}" r="2.3" fill="${dotCol}"/></svg>`;
-}
-function fmt(v,d=1){ return v==null? '<span class="na">n/a</span>' : Number(v).toFixed(d); }
-function pct(v,d=1){ return v==null? '<span class="na">n/a</span>' : `${v>0&&d==='force+'?'':''}${(v).toFixed(1)}%`; }
-
-// ---- Render financial table ----
-let sortKey='rev', sortDir=-1;
-function renderTable(filter){
- let rows = DATA.filter(d=> filter==='All' || d.market===filter);
- rows = rows.slice().sort((a,b)=>{
- let av=a[sortKey], bv=b[sortKey];
- if(sortKey==='name'){ av=a.name; bv=b.name; return sortDir*av.localeCompare(bv); }
- av = av==null? -Infinity: av; bv = bv==null? -Infinity: bv;
- return sortDir*(av-bv);
- });
- const body = rows.map(d=>{
- const growthCls = d.revG==null? '' : (d.revG>=0?'pos':'neg');
- const growthTxt = d.revG==null? '<span class="na">n/a</span>' : (d.revG>=0?'+':'')+d.revG.toFixed(1)+'%';
- return `<tr>
- <td><span class="mkt-dot" style="background:${MARKET_COLOR[d.market]}"></span><span class="co">${d.name}</span><span class="co-sub">${d.ticker||''} <span class="info" title="${(d.note||'').replace(/"/g,'&quot;')}">(i)</span></span></td>
- <td>${fmt(d.rev,0)}</td>
- <td>${sparkline(d.rtrend)}</td>
- <td class="${growthCls}">${growthTxt}</td>
- <td>${pct(d.ebitda)}</td>
- <td>${pct(d.opm)}</td>
- <td>${fmt(d.capex,0)}</td>
- <td>${sparkline(d.ctrend)}</td>
- <td>${pct(d.capexI)}</td>
- <td><span class="hoverval" title="${(d.arpuNote||'').replace(/"/g,'&quot;')}">${d.arpu==null?'<span class="na">n/a</span>':'$'+d.arpu.toFixed(2)}</span></td>
- <td><span class="hoverval" title="${(d.subsNote||'').replace(/"/g,'&quot;')}">${d.subs==null?'<span class="na">n/a</span>':d.subs.toFixed(1)}</span></td>
- <td><span class="hoverval" title="${(d.debtNote||'').replace(/"/g,'&quot;')}">${d.debt==null?'<span class="na">n/a</span>':d.debt.toFixed(2)+'x'}</span></td>
- <td class="cisco-cell"><span class="info" title="${(d.ciscoNote||'').replace(/"/g,'&quot;')}">$${d.ciscoUsd}M (${d.ciscoPct}) (i)</span></td>
- <td><span class="conf conf-${d.conf.split('-')[0]}">${d.conf}</span></td>
- </tr>`;
- }).join('');
- document.getElementById('finBody').innerHTML = body;
- document.querySelectorAll('#finTable thead th').forEach(th=>th.classList.toggle('sorted', th.dataset.key===sortKey));
-}
-
-let currentFilter='All';
-const markets = ['All','Japan','India','Australia','ASEAN'];
-document.getElementById('marketFilters').innerHTML = markets.map(m=>`<button class="chip ${m===currentFilter?'on':''}" data-m="${m}">${m}</button>`).join('');
-document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
- currentFilter=c.dataset.m;
- document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on', x.dataset.m===currentFilter));
- renderTable(currentFilter);
-}));
-document.querySelectorAll('#finTable thead th').forEach(th=>th.addEventListener('click',()=>{
- const key=th.dataset.key;
- if(key==='revTrendSpark'||key==='capexTrendSpark') return;
- if(sortKey===key){ sortDir*=-1; } else { sortKey=key; sortDir = key==='name'?1:-1; }
- renderTable(currentFilter);
-}));
-renderTable(currentFilter);
-
-// ---- Tabs ----
-document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
- document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
- btn.classList.add('active');
- document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
- document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
-}));
-
-// ---- News data ----
-const NEWS = [
-{market:"Japan", color:"var(--japan)", summary:"Japan's late-September story is a widening divergence in fundamentals against a common AI/data-center capex backdrop: KDDI is the standout (Q1 revenue +5.1%, operating profit +21%), SoftBank Corp is steady (FY2025 revenue +4.2%), while NTT Group's growth has stalled (Q1 revenue +0.7%, EBITDA -1.7%) - a genuine deterioration this cycle. The AI land grab is led by SoftBank, whose parent underwrote massive OpenAI/DC bets with a record ~$11.1bn bond (Sep-21) and a $25bn Arm-backed loan, with SoftBank Corp's Infrinia GPU cloud launching in October. Meanwhile the KDDI-Rakuten roaming termination (Sep-30) forces Rakuten into a costly self-reliant buildout (capex tripling to ~JPY200bn) while handing KDDI a cost/quality tailwind, and a weaker yen (~157.3 vs 155) trims all USD figures ~1.5%.", items:[
- {t:"SoftBank Group launches record ~$11.1bn bond to fund OpenAI bet", d:"SoftBank Group priced its largest-ever bond (~$10bn USD notes plus EUR1bn) - the biggest non-financial corporate issue from Asia-Pacific - to fund the final $10bn OpenAI tranche closing Oct-1, taking its cumulative OpenAI stake to ~$64.6bn (~13%).", src:"Bloomberg / Reuters", date:"Sep 21, 2026", url:"https://www.bloomberg.com/news/articles/2026-09-21/softbank-seeks-over-11-billion-in-junk-bond-deal-for-openai-bet"},
- {t:"SoftBank Group raises Arm-backed margin loan to $25 billion", d:"SoftBank Group increased the margin loan collateralized by its Arm Holdings stake from $20bn to $25bn to fund AI investments without diluting its Arm ownership; the news coincided with a broader AI-stock selloff that briefly pressured SoftBank Corp (9434) shares.", src:"Bloomberg", date:"Sep 18, 2026", url:"https://www.bloomberg.com/news/articles/2026-09-18/softbank-raises-arm-margin-loan-to-25-billion-as-ai-bets-grow"},
- {t:"KDDI confirms phased end of Rakuten Mobile roaming support from end-Sep-2026", d:"KDDI confirmed it will largely end roaming support for Rakuten Mobile once the current contract expires end-Sep-2026, continuing only limited, time-bound support in depopulated areas while Rakuten builds out its own coverage.", src:"BigGo Finance / RCR Wireless", date:"Aug 13, 2026", url:"https://finance.biggo.com/news/5d80371e-486d-4537-b5ce-dda1d7fc8dff"},
- {t:"KDDI unveils JPY1.2 trillion Power-to-Connect 2028 AI infrastructure strategy", d:"KDDI's FY2026-FY2029 mid-term plan earmarks JPY1.2tn for a Digital Belt spanning low-latency networks, AI data centers, subsea-cable landing stations and satellite ground stations, targeting 5% CAGR in consolidated operating profit.", src:"RCR Wireless", date:"Aug 12, 2026", url:"https://rcrwireless.com/20260812/carriers/kddi-ai-cloud-data-center"},
- {t:"NTT growth stalls: Q1 revenue +0.7%, EBITDA -1.7% as AI/IOWN spend ramps", d:"NTT Group's Q1 FY2026 (ended Jun-2026) operating revenue rose only +0.7% YoY to JPY3,262bn and EBITDA fell -1.7%, with Smart Life (banking/payments consolidation) now carrying most of the growth; management earlier pushed its JPY4tn EBITDA target out from FY2027 to FY2030.", src:"Investing.com", date:"Aug 6, 2026", url:"https://www.investing.com/news/transcripts/earnings-call-transcript-ntt-tops-q1-2026-forecasts-as-stock-rises-23-93CH-4840224"},
-]},
-{market:"India", color:"var(--india)", summary:"India remains a two-horse growth story: Airtel is compounding fastest (+18.4% revenue, 57.4% EBITDA margin, ARPU up to INR264) while a deleveraged Jio Platforms dominates the news flow ahead of its ~$3.8-4B November IPO, with global roadshows now live (price band still unannounced). The key tariff-hike catalyst has SLIPPED to Q4 FY27 (Jan-Mar 2027, ~16-20% expected) from the prior Oct-Dec 2026 read, and a fresh TRAI rule (Sep-22) mandating data-free voice/SMS recharges adds a mild low-end headwind. Vodafone Idea's survival odds improved materially after Supreme Court AGR relief and government moratoria, keeping the market a three-player field and easing competitive-intensity risk; AI-driven data-center buildouts (Airtel Nxtra's $1B round, JioCloud) are the emerging incremental Cisco-addressable capex pool.", items:[
- {t:"Jio Platforms launches global IPO roadshow, eyes November listing", d:"Jio began investor meetings across the US, Hong Kong, Singapore and the UK for its up-to-$3.8-4B offering (27 crore fresh shares, approx 2.9% of post-issue equity); bankers are debating a valuation as wide as $130-170B, with most proceeds earmarked to prepay approx INR27,500cr of Reliance Jio Infocomm debt.", src:"The Hans India", date:"Sep 10, 2026", url:"https://www.thehansindia.com/business/market-compass/jio-platforms-begins-global-roadshow-for-38-bn-ipo-1120173"},
- {t:"TRAI mandates affordable voice+SMS-only recharge plans (no bundled data)", d:"TRAI issued the Telecom Consumer Protection (13th Amendment) Regulation on Sep-22-2026, forcing Jio, Airtel and Vi to offer affordable voice/SMS recharges without bundled data - aimed at feature-phone and low-ARPU users, a mild low-end ARPU headwind.", src:"Business Standard / TRAI", date:"Sep 22, 2026", url:"https://www.business-standard.com/topic/reliance-jio"},
- {t:"Vodafone Idea wins AGR relief as Supreme Court lets Centre re-examine dues", d:"The Supreme Court deemed VI's additional AGR demand a \"matter of policy\" and allowed the government to reconsider it; the Centre has frozen ~INR87,695cr in AGR dues to FY32 with a 5-year moratorium, materially improving VI's turnaround odds and keeping India a three-player market.", src:"Bar and Bench / Outlook Business", date:"Sep 2026", url:"https://www.barandbench.com/news/litigation/vodafone-idea-gets-relief-as-supreme-court-allows-the-government-to-re-examine-agr-related-issues"},
- {t:"SEBI clears Jio Platforms INR37,700cr IPO", d:"SEBI issued final observations on Jio Platforms' draft prospectus, clearing the way for what is set to be India's largest-ever public offering, surpassing Hyundai Motor India's 2024 listing.", src:"Outlook Money", date:"Aug 28, 2026", url:"https://www.outlookmoney.com/invest/jio-platforms-ipo-sebi-approval-issue-size-debt-valuation-financials"},
- {t:"Airtel Payments Bank names new chairperson", d:"Sunil Bharti Mittal will step down as non-executive chairman of Airtel Payments Bank effective Sep-30-2026; Shabnam Sinha takes over for a three-year term from Oct-1-2026 (core Bharti Airtel board is unaffected).", src:"NSE corporate filing", date:"Aug 17, 2026", url:"https://nsearchives.nseindia.com/corporate/BHARTIARTL_17082026162258_PRAug17.pdf"},
-]},
-{market:"Australia", color:"var(--aus)", summary:"Australia's market is defined by an intensifying network-resilience and Triple Zero regulatory crisis: the Senate's Sep-21 final report recommends stripping Telstra of the Emergency Call Person role and nationalizing it under a new authority, and a fresh Optus outage in Dapto NSW (Sep-28, ~9 hours, Triple Zero affected, Ericsson gear blamed) compounds pressure just weeks after the Sep-11 voice event - keeping the stalled Singtel-Morrison Optus stake sale under a valuation cloud. On the growth side, infrastructure and AI-driven transport investment is the bright spot: Telstra validated Cisco 800G coherent optics on its Aura Network (Sep-22), NBN Co passed its \"fibre tipping point\" with EBITDA above guidance, and Vocus firmed up its Australia-Singapore Cable repair sequencing (Indigo West ~24-Oct, ASC ~4-Nov). Cisco's opportunity concentrates in optical/transport, IP core and security - strongest at Telstra and NBN, contested by Nokia/Ericsson in RAN and Arista/Ciena/Fortinet at Vocus.", items:[
- {t:"New Optus outage in Dapto NSW disrupts Triple Zero", d:"An ~9-hour mobile-tower outage at Dapto, NSW affected Triple Zero access; Optus said Ericsson equipment \"did not appear to operate as it should\" and failed to alarm that 4G was down - the second Optus outage this month after the Sep-11 76-minute voice event.", src:"ACS Information Age", date:"Sep 28, 2026", url:"https://ia.acs.org.au/article/2026/another-optus-mobile-outage-blocks-46-triple-zero-calls.html"},
- {t:"Triple Zero Senate inquiry recommends federal takeover of emergency-call role", d:"The Senate inquiry final report issued 11 recommendations including removing the Emergency Call Person role from Telstra and nationalizing it under a new authority, mandating domestic roaming, minimum reliability standards with automatic compensation, and text-to-000; the chair called it the end of the era of self-regulation.", src:"ABC News", date:"Sep 21, 2026", url:"https://www.abc.net.au/news/2026-09-21/triple-zero-senate-inquiry-recommendations/107162636"},
- {t:"Cisco coherent optics validated on Telstra Aura Network", d:"Telstra validated Cisco NCS 1014 / 800G ZR+ coherent optical technology (1.2Tbps over 700km, routed optical networking) on its flagship Aura intercity fibre - a named, current Cisco optical/transport design win.", src:"Cisco News Network APJC", date:"Sep 22, 2026", url:"https://news-blogs.cisco.com/apjc/2026/09/22/telstra-aura-network-validates-high-capacity-optical-performance-with-cisco-coherent-technology-to-improve-network-efficiency-and-scale/"},
- {t:"Vocus firms up Australia-Singapore Cable repair sequencing", d:"Vocus traced the ASC fault to a break ~615km from Singapore in Indonesian waters; it will repair a separate Indigo West fault first (targeted ~24-Oct) before permanently repairing ASC (marine repair from ~25-Oct, complete ~4-Nov), with a new 100G Japan-Guam temporary path now live and the repair vessel slated to depart Singapore ~11-Oct.", src:"Vocus company update", date:"Sep 25, 2026", url:"https://www.vocus.com.au/news/update-on-repairs-to-australia-singapore-cable"},
- {t:"Independent review finds Telstra ignored known network vulnerabilities before July outage", d:"A review into Telstra Jul-8-2026 GPS-timing outage found the telco failed to prioritize well-known network issues, including an unpatched, decades-old GPS-rollover bug; ACMA investigation continues with fine exposure up to A$30 million.", src:"ABC News", date:"Sep 2, 2026", url:"https://www.abc.net.au/news/2026-09-02/telstra-outage-review-findings-known-network-issues-not-priority/107106588"},
-]},
-{market:"ASEAN", color:"var(--asean)", summary:"ASEAN telecom is in a decisive digital-infrastructure monetization cycle: operators are carving out and listing data-center and fiber assets to fund AI-era capex - though timing is slipping, with PLDT VITRO REIT postponed to year-end (Sep-28) even as Telkom ~$4.8B InfraNexia fiber spin-off nears completion and the Globe/GCash IPO (priced below its ceiling) heads to an Oct-20 debut. Consolidation and AI data centers dominate spend (XLSMART/Smartfren integration, Indosat $3.1B Zankore neocloud, Telkom up-to-1GW NeutraDC plan, Viettel An Khanh DC), while a geopolitically charged subsea buildout (US-backed ~$14B Thailand-US cable; Vietnam still-unresolved four-cable outage cutting ~30% of international capacity) elevates resilience and route diversity. The environment favors Cisco networking/security/DC-fabric portfolio at the enterprise and interconnect layers - Viettel and Indosat are the strongest accounts - but ZTE/Huawei (XLSMART, Telkom) and NVIDIA/Nokia (AI-DC/RAN) remain entrenched in the largest growth pools.", items:[
- {t:"PLDT postpones VITRO REIT - Philippines first data-center IPO", d:"PLDT/MVP postponed the ~$400M VITRO REIT (49% stake, 8 DC assets ~24MW) that had targeted an Oct-12 listing, saying they are finalizing cornerstone investors and now target year-end 2026.", src:"Philstar / InsiderPH", date:"Sep 28, 2026", url:"https://www.philstar.com/business/2026/09/28/2559323/mvp-says-vitro-reit-ipo-may-still-happen-year"},
- {t:"Telkom Indonesia advances ~$4.8B InfraNexia fiber carve-out", d:"Telkom InfraNexia Phase 2 (IDR49.9tn/~$2.8B of assets, ~$4.8B across both phases, consolidating over 90% of network assets and 112,000km of fiber) goes to a Sep-30 shareholder EGM with results expected ~Oct-2; some outlets have prematurely reported completion - treat as pending until the vote.", src:"TelecomReview Asia", date:"Late Sep 2026", url:"https://www.telecomreviewasia.com/news/industry-news/29979-telkom-completes-usd-4-8-billion-infranexia-network-asset-spinoff/"},
- {t:"GCash (Mynt) IPO priced below ceiling ahead of Oct-20 listing", d:"Mynt IPO priced near ~PHP6.50 (vs the PHP10 ceiling) with 20+ cornerstone investors (BlackRock, Capital Group, IFC, T. Rowe, Schroders taking ~70% of the offer), implying a ~PHP60B (~$1.0B) raise; final price Oct-1, listing targeted Oct-20 - a value-unlock for ~34%-holder Globe.", src:"Caproasia / Bloomberg", date:"Sep 22-24, 2026", url:"https://www.caproasia.com/2026/09/19/philippines-globe-fintech-innovations-mynt-finance-super-app-gcash-receives-approval-for-philippines-ipo-to-raise-1-5-billion-at-10-7-billion-valuation-with-expected-ipo-listing-on-20th-october-20/"},
- {t:"US backs ~$14B Thailand-US subsea cable bypassing the South China Sea", d:"A USTDA grant (Sep-14) funds feasibility for an ~18,500km trans-Pacific link via Indonesia/Singapore/Malaysia/Vietnam/Philippines, routing around the South China Sea to bolster regional route diversity.", src:"Fortune", date:"Sep 22, 2026", url:"https://fortune.com/2026/09/22/us-thailand-subsea-cable-bypasses-south-china-sea/"},
- {t:"Vietnam completes nationwide 2G shutdown; four-cable outage still unresolved", d:"Vietnam shut down all remaining 2G networks effective Sep-15 (VNPT, Viettel and Vietnamobile each won a 900MHz block Sep-9), but a four-system subsea fault (SJC2, AAE-1, AAG, TGN-IA) since late-Aug still cuts ~30% of international capacity with only partial repairs completed.", src:"VietnamNet / VnEconomy", date:"Sep 15, 2026", url:"https://vietnamnet.vn/en/vietnam-to-shut-down-all-2g-networks-from-september-15-2026-2533864.html"},
-]},
-];
-
-document.getElementById('panel-news').innerHTML = NEWS.map(m=>`
- <div class="market-block">
- <div class="market-title"><span class="mkt-dot" style="background:${m.color}"></span><h3>${m.market}</h3></div>
- <div class="news-summary" style="--m-color:${m.color}"><p>${m.summary}</p></div>
- <div class="news-grid">
- ${m.items.map(it=>`<div class="news-card">
- <a href="${it.url}" target="_blank" rel="noopener">${it.t}</a>
- <div class="desc">${it.d}</div>
- <div class="news-meta"><span>${it.src}</span><span>${it.date}</span></div>
- </div>`).join('')}
- </div>
- </div>
-`).join('');
-</script>
+    <footer>Internal use only.</footer>
+  </div>
 </body>
 </html>
